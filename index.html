@@ -1,37 +1,62 @@
 <!DOCTYPE html>
 <html>
-<body>
+<head>
+      <link rel="stylesheet" href="style.css">
 
+  </head>
+<body>
+<script>
+function initializePictureStuff(){
+  escher = document.getElementById("picture");
+  pwidth=escher.width/2;  //the picture has two copies of itself to prvent boundary artifacts
+  pheight=escher.height/2;  //the picture has two copies of itself to prvent boundary artifacts
+  loaded=true;
+}</script>
 <h1> Escher Unwrapped
 </h1>
 
+<div class="column" id="canvas_div">
+
+<canvas id="myCanvas" width="600" height="600">
+Your browser does not support the canvas element.
+</canvas>
+
+</div>
+<div class="column">
+<div class="grid-container">
+    <p>Parameters:</p>
+    <div>
+<input type="text" id="p2" value="1" size="5" oninput="updateP()">,
+<input type="text" id="p1" value="1" size="5" oninput="updateP()">
+</div>
+<button onclick="p1[1]=1;p2[1]=1;">Default</button>
+    <p>Screen Resolution:</p>
+    <div>
+<input type="text" id="resX" value="150" size="5" oninput="updateRes()">x
+<input type="text" id="resY" value="150" size="5" oninput="updateRes()">
+</div>
+<button onclick="p1[1]=0;p2[1]=1;">Undistort</button>
+    <p>Screen size:</p>
+    <div>
+<input type="text" id="canvWidth" value="600" size="5" oninput="updateCanvasSize()">x
+<input type="text" id="canvHeight" value="600" size="5" oninput="updateCanvasSize()">
+</div>
+<button onclick="p1[1]=0;p2[1]=2;">Double</button>
+
+
+</div>
+         <h2>What is this?</h2>
+
 <p>
-This is a recreation of a project I made in Processing last year (which I might also put on Github at some point). Escher's lithograph <a href="https://en.wikipedia.org/wiki/Print_Gallery_(M._C._Escher)">Print Gallery</a> depicts a man in an art gallery looking at a painting which seems to contain that very art gallery and person inside it. Recently, I stumbled across <a href="http://www.ams.org/notices/200304/fea-escher.pdf ">a paper</a> that explained how the mind-bending painting is actually a distortion of the <a href="https://en.wikipedia.org/wiki/Droste_effect">Droste Effect</a>, just with an added rotation to the exponential map of the image. This allowed them to (among other things) undo the distortion, revealing the origional drawing escher modelled the lithograph on. The same group of people also made <a href="https://www.math.leidenuniv.nl/~smitbde/escherdroste/page_menu=intro.html">a website</a> which explains the process more visually, as well as including some of the different distortions that can be made, but I wanted to have a little more control over the process. 
+This is a recreation of a project I made in Processing last year (which I might also put on Github at some point). Escher's lithograph <a href="https://en.wikipedia.org/wiki/Print_Gallery_(M._C._Escher)">Print Gallery</a> depicts a man in an art gallery looking at a painting which seems to contain that very art gallery and person inside it. Recently, I stumbled across <a href="http://www.ams.org/notices/200304/fea-escher.pdf ">a paper</a> that explained how the mind-bending painting is actually a distortion of the <a href="https://en.wikipedia.org/wiki/Droste_effect">Droste Effect</a>, just with an added rotation to the exponential map of the image. This allowed them to (among other things) undo the distortion, revealing the origional drawing escher modelled the lithograph on. The same group of people also made <a href="http://escherdroste.math.leidenuniv.nl./">a website</a> which explains the process more visually, as well as including some of the different distortions that can be made, but I wanted to have a little more control over the process. 
 </br></br>
 So, I made this! Below is a recreation of Escher's Print Gallery (albeit more pixelated). Click on the screen and move the mouse to zoom in or out, and use the W,A,S, and D keys or directly mess with the 'Distorition Parameters' below to change the distortion (Escher's distortion is 1,1; the undistorted version is 1,0). You can also change the size of the window and screen resolution at any time. Have fun!
 </p>
 
-<canvas id="myCanvas" width="600" height="600"
-style="border:1px solid #c3c3c3;">
-Your browser does not support the canvas element.
-</canvas>
-
 <img src="escherUnwrappedFixed.jpg" onload="initializePictureStuff()" id="picture" style="display:none"/>
 
-<p>
-Parameters: 
-<input type="text" id="p2" value="1" size="5" oninput="updateP()">,
-<input type="text" id="p1" value="1" size="5" oninput="updateP()"><br/>
 
-Screen Resolution: 
-<input type="text" id="resX" value="150" size="5" oninput="updateRes()">x
-<input type="text" id="resY" value="150" size="5" oninput="updateRes()"><br/>
-
-Screen size:
-<input type="text" id="canvWidth" value="600" size="5" oninput="updateCanvasSize()">x
-<input type="text" id="canvHeight" value="600" size="5" oninput="updateCanvasSize()"><br/>
-</p>
-
+</div>
 <script>
   //<img src="escherUnwrappedFixed.jpg" id="picture" style="display:none"/>
 var x,y;
@@ -44,7 +69,6 @@ var p2=[1,1];       //This is because I wanted a smooth transition between parem
 
 var temp,temp1,temp2;
 
-var speed=.05;
 var res=[4,4];
 var variableRes=true;
 var imgData;
@@ -58,12 +82,6 @@ var loaded=false
 var escher;
 var pwidth;
 var pheight;
-function initializePictureStuff(){
-  escher = document.getElementById("picture");
-  pwidth=escher.width/2;  //the picture has two copies of itself to prvent boundary artifacts
-  pheight=escher.height/2;  //the picture has two copies of itself to prvent boundary artifacts
-  loaded=true;
-}
 
 </script>
 
@@ -102,11 +120,19 @@ function updateScreen(){
   }
 
   if(p1[0]!=p1[1]){
-    p1[0]+=(Math.abs(speed)<Math.abs(p1[1]-p1[0]))?speed*(p1[1]-p1[0])/Math.abs(p1[1]-p1[0]):(p1[1]-p1[0]);
+    p1[0]+=Math.abs((p1[1]-p1[0]))>.05?
+                (Math.abs((p1[1]-p1[0])/10)>.05?
+                      (p1[1]-p1[0])/10:
+                      (p1[1]-p1[0])>0?.05:-.05):
+                (p1[1]-p1[0])
     updatePText();
   }
   if(p2[0]!=p2[1]){
-    p2[0]+=(Math.abs(speed)<Math.abs(p2[1]-p2[0]))?speed*(p2[1]-p2[0])/Math.abs(p2[1]-p2[0]):(p2[1]-p2[0]);
+    p2[0]+=Math.abs((p2[1]-p2[0]))>.05?
+                (Math.abs((p2[1]-p2[0])/10)>.05?
+                      (p2[1]-p2[0])/10:
+                      (p2[1]-p2[0])>0?.05:-.05):
+                (p2[1]-p2[0])    
     updatePText();
   }
 }

@@ -16,9 +16,11 @@ function updatePText(){
 
 function updateP(){
   temp=[document.getElementById("p1").value,document.getElementById("p2").value];
-  if(isNumeric(temp[0]) && isNumeric(temp[1])){
-    p1=[temp[0],temp[0]];
-    p2=[temp[1],temp[1]];
+  if(isNumeric(temp[0])){
+    p1=[parseInt(temp[0]),parseInt(temp[0])];
+  }
+  if(isNumeric(temp[1])){
+    p2=[parseInt(temp[1]),parseInt(temp[1])];
   }
 }
 
@@ -30,9 +32,11 @@ function updateRes(){
 
 function updateCanvasSize(){
   temp=[document.getElementById("canvWidth").value,document.getElementById("canvHeight").value];
+  div=document.getElementById("canvas_div");
   if(isNumeric(temp[0]) && isNumeric(temp[1])){
     canvas.width=temp[0];
     canvas.height=temp[1];
+    div.setAttribute("style","width:"+temp[0]+"px;"+"height:"+temp[1]+"px;");
     updateRes();
     drawScreen();
   }
@@ -60,10 +64,8 @@ document.addEventListener('mozpointerlockchange', lockChangeAlert, false);
 function lockChangeAlert() {
   if (document.pointerLockElement === canvas ||
       document.mozPointerLockElement === canvas) {
-    console.log('The pointer lock status is now locked');
     document.addEventListener("mousemove", updatePosition, false);
   } else {
-    console.log('The pointer lock status is now unlocked');  
     document.removeEventListener("mousemove", updatePosition, false);
   }
 }
@@ -94,13 +96,6 @@ function keyPressed(e) {
     case('d'):
       p2[1]++;
       break;
-    case('x'):
-      alert("Parameters: "+[p1[0],p2[0]]);
-      break;
   }
-}
-
-function keyReleased(e) {
-
 }
 

@@ -11,6 +11,31 @@ function initializePictureStuff(){
   pwidth=escher.width/2;  //the picture has two copies of itself to prvent boundary artifacts
   pheight=escher.height/2;  //the picture has two copies of itself to prvent boundary artifacts
   loaded=true;
+
+  //from https://gist.github.com/jawdatls/465d82f2158e1c4ce161
+    var refCanvas = document.createElement('canvas');
+    refCanvas.width = escher.width;
+    refCanvas.height = escher.height;
+
+    var tempContext = refCanvas.getContext('2d');
+
+    for(var x=0;x<escher.width;x++){
+      for(var y=0;y<escher.height;y++){
+        tempContext.drawImage(escher,x,y,1,1,x,y,1,1);
+      }
+    }
+
+    var pictureDataObj = tempContext.getImageData(0, 0, refCanvas.width, refCanvas.height);
+    pictureData=pictureDataObj.data;
+
+    // Now you can access pixel data from imageData.data.
+    // It's a one-dimensional array of RGBA values.
+    // Here's an example of how to get a pixel's color at (x,y)
+    //var index = (y*imageData.width + x) * 4;
+    //var red = imageData.data[index];
+    //var green = imageData.data[index + 1];
+    //var blue = imageData.data[index + 2];
+    //var alpha = imageData.data[index + 3];
 }</script>
 <h1> Escher Unwrapped
 </h1>
@@ -94,7 +119,7 @@ var c=256;
 //c=1.7018412395203226;
 var lc=Math.log(c);
 
-function wrap(x,mod){           //like modulo but for negatives to
+function wrap(x,mod){           //like modulo but for negatives too
     return (x%mod+mod)%mod
 }
 

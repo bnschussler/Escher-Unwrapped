@@ -26,7 +26,15 @@ function updateP(){
 
 function updateRes(){
   if(isNumeric(document.getElementById("resX").value) && isNumeric(document.getElementById("resY").value)){
-    res=[canvas.width/document.getElementById("resX").value,canvas.height/document.getElementById("resY").value];
+    //res=[canvas.width/document.getElementById("resX").value,canvas.height/document.getElementById("resY").value];
+    document.getElementById("canvas_div").setAttribute("style","width:"+document.getElementById("canvas_div").offsetWidth+"px;"+"height:"+document.getElementById("canvas_div").offsetHeight+"px;");
+
+    canvas.width=document.getElementById("resX").value;
+    canvas.height=document.getElementById("resY").value;
+
+    canvasDataObj = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    canvasData=canvasDataObj.data;
+    canvasData.fill(255);
   }
 }
 
@@ -34,11 +42,11 @@ function updateCanvasSize(){
   temp=[document.getElementById("canvWidth").value,document.getElementById("canvHeight").value];
   div=document.getElementById("canvas_div");
   if(isNumeric(temp[0]) && isNumeric(temp[1])){
-    canvas.width=temp[0];
-    canvas.height=temp[1];
-    div.setAttribute("style","width:"+temp[0]+"px;"+"height:"+temp[1]+"px;");
-    updateRes();
-    drawScreen();
+    //canvas.width=temp[0];
+    //canvas.height=temp[1];
+    div.setAttribute("style","min-width:"+temp[0]+"px;"+"width:"+temp[0]+"px;"+"height:"+temp[1]+"px;");
+    //updateRes();
+    //drawScreen();
   }
 }
 
@@ -60,6 +68,7 @@ canvas.onclick = function() {
 // Hook pointer lock state change events for different browsers
 document.addEventListener('pointerlockchange', lockChangeAlert, false);
 document.addEventListener('mozpointerlockchange', lockChangeAlert, false);
+canvas.addEventListener("touchmove",updatePositionTouch);
 
 function lockChangeAlert() {
   if (document.pointerLockElement === canvas ||
@@ -75,6 +84,12 @@ var tracker = document.getElementById('tracker');
 function updatePosition(e) {
   mX += e.movementX;
   mY += e.movementY;
+}
+
+function updatePositionTouch(e){
+  e.preventDefault();
+  mX = e.targetTouches[0].clientX; 
+  mY = e.targetTouches[0].clientY;
 }
 
 /*Keyboard Inputs*/

@@ -28,6 +28,7 @@ body > .column{
 .grid-container {
   display: grid;
   grid-template-columns: max-content max-content max-content;
+  grid-auto-rows: max-content; /*stupid hack because safari doesn't like grid containers*/
 }
 
 .grid-container > *{
